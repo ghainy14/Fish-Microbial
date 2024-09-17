@@ -3,8 +3,9 @@ import pandas as pd
 import numpy as np
 import pickle
 
-import joblib
-model = joblib.load('microbial_model.pkl')
+# Load the model
+with open('microbial_model.pkl', 'rb') as file:
+    model = pickle.load(file)
 
 # Load the trained model
 #@st.cache(allow_output_mutation=True)
