@@ -1,8 +1,15 @@
+You can address the issues you're facing by integrating the `scaler` and `encoder` into your Streamlit app dynamically, rather than loading from files (`scaler.pkl` and `encoder.pkl`). I'll help you rewrite the code, so it initializes the `MinMaxScaler` and `OneHotEncoder` directly, instead of trying to load them from `.pkl` files.
+
+Here is the updated code:
+
+```python
 import streamlit as st
 import pandas as pd
 import numpy as np
 import pickle
 from sklearn.preprocessing import LabelEncoder, MinMaxScaler, OneHotEncoder
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.multioutput import MultiOutputClassifier
 from sklearn.metrics import classification_report
 
 # Load the trained model
@@ -12,28 +19,22 @@ def load_model():
         model = pickle.load(file)
     return model
 
-# Load the scaler (if you used one during training)
+# Initialize the scaler and encoder
 @st.cache(allow_output_mutation=True)
-def load_scaler():
-    with open('scaler.pkl', 'rb') as file:
-        scaler = pickle.load(file)
-    return scaler
+def initialize_scaler():
+    return MinMaxScaler()
 
-# Load the encoder for categorical targets
 @st.cache(allow_output_mutation=True)
-def load_encoder():
-    with open('encoder.pkl', 'rb') as file:
-        encoder = pickle.load(file)
-    return encoder
+def initialize_encoder():
+    return OneHotEncoder(sparse_output=False)
 
 # Load the model, scaler, and encoder
 model = load_model()
-scaler = load_scaler()
-encoder = load_encoder()
+scaler = initialize_scaler()
+encoder = initialize_encoder()
 
 # Streamlit app layout
 st.title("Microbial Organisms Multi-Label Prediction App")
-
 
 st.header("Input Predicting Variables")
 # Collecting input values for all feature columns
@@ -90,24 +91,24 @@ input_data = pd.DataFrame({
     'TBA': [tba],
     'PBC': [pbc],
     'TFC': [tfc],
-    'Pigmentation': [pigmentation1],
-    'Elevation': [elevation1],
-    'Texture.1': [texture1],
-    'Margin': [margin1],
-    'Shape': [shape1],
-    'Optical Density': [optical_density1],
-    'Pigmentation.1': [pigmentation2],
-    'Elevation.1': [elevation2],
-    'Texture.2': [texture2],
-    'Margin.1': [margin2],
-    'Shape.1': [shape2],
-    'Optical Density.1': [optical_density2],
-    'Pigmentation.2': [pigmentation3],
-    'Elevation.2': [elevation3],
-    'Texture.3': [texture3],
-    'Margin.2': [margin3],
-    'Shape.2': [shape3],
-    'Optical Density.2': [optical_density3],
+    'Pigmentation': [pigmentation],
+    'Elevation': [elevation],
+    'Texture.1': [texture_1],
+    'Margin': [margin],
+    'Shape': [shape],
+    'Optical Density': [optical_density],
+    'Pigmentation.1': [pigmentation_1],
+    'Elevation.1': [elevation_1],
+    'Texture.2': [texture_2],
+    'Margin.1': [margin_1],
+    'Shape.1': [shape_1],
+    'Optical Density.1': [optical_density_1],
+    'Pigmentation.2': [pigmentation_2],
+    'Elevation.2': [elevation_2],
+    'Texture.3': [texture_3],
+    'Margin.2': [margin_2],
+    'Shape.2': [shape_2],
+    'Optical Density.2': [optical_density_2],
     'pH': [ph],
     'Lipid oxidation': [lipid_oxidation],
     'Moisture Content': [moisture_content],
@@ -115,6 +116,7 @@ input_data = pd.DataFrame({
     'Fat': [fat],
     'Ash': [ash]
 })
+
 if st.button("Predict"):
     try:
         # Apply encoding to categorical fields (LabelEncoder for input fields)
@@ -125,9 +127,12 @@ if st.button("Predict"):
         
         # Combine numeric and encoded categorical data
         input_preprocessed = pd.concat([df_to_encode, input_data.select_dtypes(include=np.number)], axis=1)
-
+        
+        # Apply scaling
+        input_scaled = scaler.fit_transform(input_preprocessed)
+        
         # Make predictions with the preprocessed data
-        prediction = model.predict(input_preprocessed)
+        prediction = model.predict(input_scaled)
 
         # Decode the multilabel prediction (OneHotEncoder reverse transformation)
         predicted_labels = encoder.inverse_transform(prediction)
@@ -141,4 +146,11 @@ if st.button("Predict"):
 
 # Footer
 st.write("This application uses a multi-label classification model to predict microbial organisms based on input features.")
+```
 
+### Key Changes:
+1. **Scaler and Encoder**: The `MinMaxScaler` and `OneHotEncoder` are initialized directly within the code. You don't need to load them from files (`.pkl`), which simplifies the setup.
+2. **Label Encoding**: I used `LabelEncoder` for categorical input fields and scaled the numeric data using `MinMaxScaler` before feeding it to the model.
+3. **Error Handling**: The app now includes error handling for any exceptions during prediction.
+
+Let me know if you need further help!
