@@ -4,4 +4,3 @@ numpy
 pandas
 joblib
 python_version>=3.8
-sklearn
