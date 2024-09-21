@@ -2,22 +2,34 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import pickle
-
-# Load the model
-with open('microbial_model.pkl', 'rb') as file:
-    model = pickle.load(file)
+from sklearn.preprocessing import LabelEncoder, MinMaxScaler, OneHotEncoder
+from sklearn.metrics import classification_report
 
 # Load the trained model
-#@st.cache(allow_output_mutation=True)
-#def load_model():
- #   with open('microbial_model.pkl', 'rb') as file:
-  #      model = pickle.load(file)
-   # return model
+@st.cache(allow_output_mutation=True)
+def load_model():
+    with open('microbial_model.pkl', 'rb') as file:
+        model = pickle.load(file)
+    return model
+
+# Load the scaler (if you used one during training)
+@st.cache(allow_output_mutation=True)
+def load_scaler():
+    with open('scaler.pkl', 'rb') as file:
+        scaler = pickle.load(file)
+    return scaler
+
+# Load the encoder for categorical targets
+@st.cache(allow_output_mutation=True)
+def load_encoder():
+    with open('encoder.pkl', 'rb') as file:
+        encoder = pickle.load(file)
+    return encoder
 
 # Load the model, scaler, and encoder
-#model = load_model()
-#scaler = load_scaler()
-#encoder = load_encoder()
+model = load_model()
+scaler = load_scaler()
+encoder = load_encoder()
 
 # Streamlit app layout
 st.title("Microbial Organisms Multi-Label Prediction App")
@@ -105,25 +117,17 @@ input_data = pd.DataFrame({
 })
 if st.button("Predict"):
     try:
-        # Handle preprocessing here
-        # Apply scaling to numerical fields (if necessary)
-        numeric_fields = input_data.select_dtypes(include=np.number)
-        input_data_scaled = scaler.transform(numeric_fields)
-        
         # Apply encoding to categorical fields (LabelEncoder for input fields)
         df_to_encode = input_data.select_dtypes(include='object').astype(str)
         le = LabelEncoder()
         for column in df_to_encode.columns:
             df_to_encode[column] = le.fit_transform(df_to_encode[column])
         
-        # Combine the scaled and encoded data
-        input_preprocessed = np.hstack([input_data_scaled, df_to_encode])
-        
-        # Convert preprocessed input back into a DataFrame
-        input_preprocessed_df = pd.DataFrame(input_preprocessed, columns=input_data.columns)
+        # Combine numeric and encoded categorical data
+        input_preprocessed = pd.concat([df_to_encode, input_data.select_dtypes(include=np.number)], axis=1)
 
         # Make predictions with the preprocessed data
-        prediction = model.predict(input_preprocessed_df)
+        prediction = model.predict(input_preprocessed)
 
         # Decode the multilabel prediction (OneHotEncoder reverse transformation)
         predicted_labels = encoder.inverse_transform(prediction)
@@ -137,5 +141,4 @@ if st.button("Predict"):
 
 # Footer
 st.write("This application uses a multi-label classification model to predict microbial organisms based on input features.")
-
 
