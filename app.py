@@ -1,8 +1,4 @@
-You can address the issues you're facing by integrating the `scaler` and `encoder` into your Streamlit app dynamically, rather than loading from files (`scaler.pkl` and `encoder.pkl`). I'll help you rewrite the code, so it initializes the `MinMaxScaler` and `OneHotEncoder` directly, instead of trying to load them from `.pkl` files.
 
-Here is the updated code:
-
-```python
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -146,11 +142,3 @@ if st.button("Predict"):
 
 # Footer
 st.write("This application uses a multi-label classification model to predict microbial organisms based on input features.")
-```
-
-### Key Changes:
-1. **Scaler and Encoder**: The `MinMaxScaler` and `OneHotEncoder` are initialized directly within the code. You don't need to load them from files (`.pkl`), which simplifies the setup.
-2. **Label Encoding**: I used `LabelEncoder` for categorical input fields and scaled the numeric data using `MinMaxScaler` before feeding it to the model.
-3. **Error Handling**: The app now includes error handling for any exceptions during prediction.
-
-Let me know if you need further help!
