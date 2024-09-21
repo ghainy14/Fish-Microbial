@@ -22,7 +22,7 @@ with open('microbial_model.pkl', 'rb') as file:
 # Streamlit app layout
 st.title("Microbial Organisms Multi-Label Prediction App")
 
-# Example: Input fields (customize these based on your feature space)
+
 st.header("Input Predicting Variables")
 # Collecting input values for all feature columns
 fish_sample = st.text_input("Fish Sample", "")
@@ -38,30 +38,30 @@ state = st.text_input("State", "")
 tba = st.text_input("TBA", "")
 pbc = st.text_input("PBC", "")
 tfc = st.text_input("TFC", "")
-pigmentation = st.text_input("Pigmentation", "")
-elevation = st.text_input("Elevation", "")
-texture_1 = st.text_input("Texture.1", "")
-margin = st.text_input("Margin", "")
-shape = st.text_input("Shape", "")
-optical_density = st.text_input("Optical Density", "")
-pigmentation_1 = st.text_input("Pigmentation.1", "")
-elevation_1 = st.text_input("Elevation.1", "")
-texture_2 = st.text_input("Texture.2", "")
-margin_1 = st.text_input("Margin.1", "")
-shape_1 = st.text_input("Shape.1", "")
-optical_density_1 = st.text_input("Optical Density.1", "")
-pigmentation_2 = st.text_input("Pigmentation.2", "")
-elevation_2 = st.text_input("Elevation.2", "")
-texture_3 = st.text_input("Texture.3", "")
-margin_2 = st.text_input("Margin.2", "")
-shape_2 = st.text_input("Shape.2", "")
-optical_density_2 = st.text_input("Optical Density.2", "")
+pigmentation = st.text_input("Pigmentation1", "")
+elevation = st.text_input("Elevation1", "")
+texture_1 = st.text_input("Texture1", "")
+margin = st.text_input("Margin1", "")
+shape = st.text_input("Shape1", "")
+optical_density = st.text_input("Optical Density1", "")
+pigmentation_1 = st.text_input("Pigmentation2", "")
+elevation_1 = st.text_input("Elevation2", "")
+texture_2 = st.text_input("Texture2", "")
+margin_1 = st.text_input("Margin2", "")
+shape_1 = st.text_input("Shape2", "")
+optical_density_1 = st.text_input("Optical Density2", "")
+pigmentation_2 = st.text_input("Pigmentation3", "")
+elevation_2 = st.text_input("Elevation3", "")
+texture_3 = st.text_input("Texture3", "")
+margin_2 = st.text_input("Margin3", "")
+shape_2 = st.text_input("Shape3", "")
+optical_density_2 = st.text_input("Optical Density3", "")
 ph = st.number_input("pH", min_value=0.0)
-lipid_oxidation = st.number_input("Lipid Oxidation (MDA) mg/L", min_value=0.0)
-moisture_content = st.number_input("Moisture Content (%)", min_value=0.0)
-protein = st.number_input("Protein (%)", min_value=0.0)
-fat = st.number_input("Fat (%)", min_value=0.0)
-ash = st.number_input("Ash (%)", min_value=0.0)
+lipid_oxidation = st.number_input("Lipid Oxidation", min_value=0.0)
+moisture_content = st.number_input("Moisture Content", min_value=0.0)
+protein = st.number_input("Protein", min_value=0.0)
+fat = st.number_input("Fat", min_value=0.0)
+ash = st.number_input("Ash", min_value=0.0)
 
 # Combine input data into a DataFrame
 input_data = pd.DataFrame({
@@ -78,24 +78,24 @@ input_data = pd.DataFrame({
     'TBA': [tba],
     'PBC': [pbc],
     'TFC': [tfc],
-    'Pigmentation': [pigmentation],
-    'Elevation': [elevation],
-    'Texture.1': [texture_1],
-    'Margin': [margin],
-    'Shape': [shape],
-    'Optical Density': [optical_density],
-    'Pigmentation.1': [pigmentation_1],
-    'Elevation.1': [elevation_1],
-    'Texture.2': [texture_2],
-    'Margin.1': [margin_1],
-    'Shape.1': [shape_1],
-    'Optical Density.1': [optical_density_1],
-    'Pigmentation.2': [pigmentation_2],
-    'Elevation.2': [elevation_2],
-    'Texture.3': [texture_3],
-    'Margin.2': [margin_2],
-    'Shape.2': [shape_2],
-    'Optical Density.2': [optical_density_2],
+    'Pigmentation': [pigmentation1],
+    'Elevation': [elevation1],
+    'Texture.1': [texture1],
+    'Margin': [margin1],
+    'Shape': [shape1],
+    'Optical Density': [optical_density1],
+    'Pigmentation.1': [pigmentation2],
+    'Elevation.1': [elevation2],
+    'Texture.2': [texture2],
+    'Margin.1': [margin2],
+    'Shape.1': [shape2],
+    'Optical Density.1': [optical_density2],
+    'Pigmentation.2': [pigmentation3],
+    'Elevation.2': [elevation3],
+    'Texture.3': [texture3],
+    'Margin.2': [margin3],
+    'Shape.2': [shape3],
+    'Optical Density.2': [optical_density3],
     'pH': [ph],
     'Lipid oxidation': [lipid_oxidation],
     'Moisture Content': [moisture_content],
