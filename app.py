@@ -1,12 +1,7 @@
-
 import streamlit as st
 import pandas as pd
 import numpy as np
 import pickle
-from sklearn.preprocessing import LabelEncoder, MinMaxScaler, OneHotEncoder
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.multioutput import MultiOutputClassifier
-from sklearn.metrics import classification_report
 
 # Load the trained model
 @st.cache(allow_output_mutation=True)
@@ -15,19 +10,25 @@ def load_model():
         model = pickle.load(file)
     return model
 
-# Initialize the scaler and encoder
+# Load the scaler (for feature scaling)
 @st.cache(allow_output_mutation=True)
-def initialize_scaler():
-    return MinMaxScaler()
+def load_scaler():
+    with open('scaler.pkl', 'rb') as file:
+        scaler = pickle.load(file)
+    return scaler
 
+# Load the encoder for the multi-label classification targets
 @st.cache(allow_output_mutation=True)
-def initialize_encoder():
-    return OneHotEncoder(sparse_output=False)
+def load_encoder():
+    with open('encoder.pkl', 'rb') as file:
+        encoder = pickle.load(file)
+    return encoder
 
 # Load the model, scaler, and encoder
 model = load_model()
-scaler = initialize_scaler()
-encoder = initialize_encoder()
+scaler = load_scaler()
+encoder = load_encoder()
+
 
 # Streamlit app layout
 st.title("Microbial Organisms Multi-Label Prediction App")
@@ -142,3 +143,4 @@ if st.button("Predict"):
 
 # Footer
 st.write("This application uses a multi-label classification model to predict microbial organisms based on input features.")
+
