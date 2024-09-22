@@ -11,11 +11,11 @@ def load_model():
     return model
 
 # Load the scaler (for feature scaling)
-@st.cache(allow_output_mutation=True)
-def load_scaler():
-    with open('scaler.pkl', 'rb') as file:
-        scaler = pickle.load(file)
-    return scaler
+#@st.cache(allow_output_mutation=True)
+#def load_scaler():
+#    with open('scaler.pkl', 'rb') as file:
+ #       scaler = pickle.load(file)
+  #  return scaler
 
 # Load the encoder for the multi-label classification targets
 @st.cache(allow_output_mutation=True)
@@ -26,7 +26,7 @@ def load_encoder():
 
 # Load the model, scaler, and encoder
 model = load_model()
-scaler = load_scaler()
+#scaler = load_scaler()
 encoder = load_encoder()
 
 
@@ -126,7 +126,7 @@ if st.button("Predict"):
         input_preprocessed = pd.concat([df_to_encode, input_data.select_dtypes(include=np.number)], axis=1)
         
         # Apply scaling
-        input_scaled = scaler.fit_transform(input_preprocessed)
+ #       input_scaled = scaler.fit_transform(input_preprocessed)
         
         # Make predictions with the preprocessed data
         prediction = model.predict(input_scaled)
