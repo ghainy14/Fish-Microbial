@@ -7,7 +7,7 @@ from sklearn.preprocessing import LabelEncoder, MinMaxScaler
 # Load the trained model
 
 def load_model():
-    with open('microbial_modesl.pkl', 'rb') as file:
+    with open('microbial_models.pkl', 'rb') as file:
         model = pickle.load(file)
     return model
 
