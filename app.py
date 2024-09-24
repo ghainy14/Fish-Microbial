@@ -1,11 +1,11 @@
-#import streamlit as st
+import streamlit as st
 import pandas as pd
 import numpy as np
 import pickle
 from sklearn.preprocessing import LabelEncoder, MinMaxScaler
 
 # Load the trained model
-
+@st.cache(allow_output_mutation=True)
 def load_model():
     with open('microbial_models.pkl', 'rb') as file:
         model = pickle.load(file)
