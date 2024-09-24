@@ -99,7 +99,7 @@ input_data = pd.DataFrame({
     'Texture2': [texture2],
     'Margin2': [margin2],
     'Shape2': [shape2],
-    'Optical_Density2': [optical_density2],
+    'Optical Density2': [optical_density2],
     'Pigmentation3': [pigmentation3],
     'Elevation3': [elevation3],
     'Texture3': [texture3],
