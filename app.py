@@ -6,10 +6,10 @@ from sklearn.preprocessing import LabelEncoder, MinMaxScaler
 
 # Load the trained model
 @st.cache(allow_output_mutation=True)
-model = load_model()
-if not hasattr(model, 'predict'):
-    st.error("Loaded object is not a model.")
-    st.stop()
+def load_model():
+    with open('microbial_modesl.pkl', 'rb') as file:
+        model = pickle.load(file)
+    return model
 
 # Load the scaler (for feature scaling)
 @st.cache(allow_output_mutation=True)
