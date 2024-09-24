@@ -2,11 +2,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import pickle
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler, LabelEncoder
-from sklearn.linear_model import LogisticRegression
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import classification_report, accuracy_score
+from sklearn.preprocessing import LabelEncoder, MinMaxScaler
 
 # Load the trained model
 @st.cache(allow_output_mutation=True)
@@ -16,11 +12,11 @@ def load_model():
     return model
 
 # Load the scaler (for feature scaling)
-#@st.cache(allow_output_mutation=True)
-#def load_scaler():
-#    with open('scaler.pkl', 'rb') as file:
- #       scaler = pickle.load(file)
-  #  return scaler
+@st.cache(allow_output_mutation=True)
+def load_scaler():
+    with open('scaler.pkl', 'rb') as file:
+        scaler = pickle.load(file)
+    return scaler
 
 # Load the encoder for the multi-label classification targets
 @st.cache(allow_output_mutation=True)
@@ -31,9 +27,8 @@ def load_encoder():
 
 # Load the model, scaler, and encoder
 model = load_model()
-#scaler = load_scaler()
+scaler = load_scaler()
 encoder = load_encoder()
-
 
 # Streamlit app layout
 st.title("Microbial Organisms Multi-Label Prediction App")
@@ -130,10 +125,10 @@ if st.button("Predict"):
         # Combine numeric and encoded categorical data
         input_preprocessed = pd.concat([df_to_encode, input_data.select_dtypes(include=np.number)], axis=1)
         
-        # Apply scaling
- #       input_scaled = scaler.fit_transform(input_preprocessed)
+        # Apply scaling (MinMaxScaler)
+        input_scaled = scaler.transform(input_preprocessed)
         
-        # Make predictions with the preprocessed data
+        # Make predictions with the preprocessed and scaled data
         prediction = model.predict(input_scaled)
 
         # Decode the multilabel prediction (OneHotEncoder reverse transformation)
@@ -148,4 +143,3 @@ if st.button("Predict"):
 
 # Footer
 st.write("This application uses a multi-label classification model to predict microbial organisms based on input features.")
-
