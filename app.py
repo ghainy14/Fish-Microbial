@@ -48,24 +48,24 @@ state = st.text_input("State", "")
 tba = st.text_input("TBA", "")
 pbc = st.text_input("PBC", "")
 tfc = st.text_input("TFC", "")
-pigmentation = st.text_input("Pigmentation1", "")
-elevation = st.text_input("Elevation1", "")
-texture_1 = st.text_input("Texture1", "")
-margin = st.text_input("Margin1", "")
-shape = st.text_input("Shape1", "")
-optical_density = st.text_input("Optical Density1", "")
-pigmentation_1 = st.text_input("Pigmentation2", "")
-elevation_1 = st.text_input("Elevation2", "")
-texture_2 = st.text_input("Texture2", "")
-margin_1 = st.text_input("Margin2", "")
-shape_1 = st.text_input("Shape2", "")
-optical_density_1 = st.text_input("Optical Density2", "")
-pigmentation_2 = st.text_input("Pigmentation3", "")
-elevation_2 = st.text_input("Elevation3", "")
-texture_3 = st.text_input("Texture3", "")
-margin_2 = st.text_input("Margin3", "")
-shape_2 = st.text_input("Shape3", "")
-optical_density_2 = st.text_input("Optical Density3", "")
+pigmentation1 = st.text_input("Pigmentation1", "")
+elevation1 = st.text_input("Elevation1", "")
+texture1 = st.text_input("Texture1", "")
+margin1 = st.text_input("Margin1", "")
+shape1 = st.text_input("Shape1", "")
+optical_density1 = st.text_input("Optical Density1", "")
+pigmentation2 = st.text_input("Pigmentation2", "")
+elevation2= st.text_input("Elevation2", "")
+texture2 = st.text_input("Texture2", "")
+margin2 = st.text_input("Margin2", "")
+shape2 = st.text_input("Shape2", "")
+optical_density2 = st.text_input("Optical Density2", "")
+pigmentation3 = st.text_input("Pigmentation3", "")
+elevation3 = st.text_input("Elevation3", "")
+texture3 = st.text_input("Texture3", "")
+margin3 = st.text_input("Margin3", "")
+shape3 = st.text_input("Shape3", "")
+optical_density3 = st.text_input("Optical Density3", "")
 ph = st.number_input("pH", min_value=0.0)
 lipid_oxidation = st.number_input("Lipid Oxidation", min_value=0.0)
 moisture_content = st.number_input("Moisture Content", min_value=0.0)
@@ -88,24 +88,24 @@ input_data = pd.DataFrame({
     'TBA': [tba],
     'PBC': [pbc],
     'TFC': [tfc],
-    'Pigmentation': [pigmentation],
-    'Elevation': [elevation],
-    'Texture.1': [texture_1],
-    'Margin': [margin],
-    'Shape': [shape],
-    'Optical Density': [optical_density],
-    'Pigmentation1': [pigmentation_1],
-    'Elevation1': [elevation_1],
-    'Texture2': [texture_2],
-    'Margin1': [margin_1],
-    'Shape1': [shape_1],
-    'Optical Density1': [optical_density_1],
-    'Pigmentation2': [pigmentation_2],
-    'Elevation2': [elevation_2],
-    'Texture3': [texture_3],
-    'Margin2': [margin_2],
-    'Shape2': [shape_2],
-    'Optical Density2': [optical_density_2],
+    'Pigmentation1': [pigmentation1],
+    'Elevation1': [elevation1],
+    'Texture1': [texture1],
+    'Margin1': [margin1],
+    'Shape1': [shape1],
+    'Optical Density1': [optical_density1],
+    'Pigmentation2': [pigmentation2],
+    'Elevation2': [elevation2],
+    'Texture2': [texture2],
+    'Margin2': [margin2],
+    'Shape2': [shape2],
+    'Optical_Density2': [optical_density2],
+    'Pigmentation3': [pigmentation3],
+    'Elevation3': [elevation3],
+    'Texture3': [texture3],
+    'Margin3': [margin3],
+    'Shape3': [shape3],
+    'Optical Density3': [optical_density3],
     'pH': [ph],
     'Lipid oxidation': [lipid_oxidation],
     'Moisture Content': [moisture_content],
