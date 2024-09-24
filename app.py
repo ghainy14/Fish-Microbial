@@ -1,4 +1,4 @@
-import streamlit as st
+#import streamlit as st
 import pandas as pd
 import numpy as np
 import pickle
@@ -6,10 +6,10 @@ from sklearn.preprocessing import LabelEncoder, MinMaxScaler
 
 # Load the trained model
 @st.cache(allow_output_mutation=True)
-def load_model():
-    with open('microbial_model.pkl', 'rb') as file:
-        model = pickle.load(file)
-    return model
+model = load_model()
+if not hasattr(model, 'predict'):
+    st.error("Loaded object is not a model.")
+    st.stop()
 
 # Load the scaler (for feature scaling)
 @st.cache(allow_output_mutation=True)
