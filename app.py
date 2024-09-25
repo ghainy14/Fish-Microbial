@@ -125,25 +125,20 @@ if st.button("Predict"):
         # Combine numeric and encoded categorical data
         input_preprocessed = pd.concat([df_to_encode, input_data.select_dtypes(include=np.number)], axis=1)
         
-        # Apply scaling
+        # Apply scaling (MinMaxScaler)
         input_scaled = scaler.transform(input_preprocessed)
         
         # Make predictions with the preprocessed data
         prediction = model.predict(input_scaled)
 
-        # Check for all-zero predictions
-        if np.all(prediction == 0):
-            st.warning("The model returned all zeros for the prediction, meaning no valid categories were predicted.")
-        else:
-            # Decode the multilabel prediction (OneHotEncoder reverse transformation)
-            predicted_labels = encoder.inverse_transform(prediction)
+        # Decode the multilabel prediction (OneHotEncoder reverse transformation)
+        predicted_labels = encoder.inverse_transform(prediction)
 
-            # Display the prediction
-            st.subheader("Predicted Microbial Organisms:")
-            st.write(predicted_labels)
+        # Display the prediction
+        st.subheader("Predicted Microbial Organisms:")
+        st.write(predicted_labels)
 
     except Exception as e:
         st.error(f"An error occurred during prediction: {e}")
-
 # Footer
 st.write("This application uses a multi-label classification model to predict microbial organisms based on input features.")
