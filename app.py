@@ -131,13 +131,19 @@ if st.button("Predict"):
         # Make predictions with the preprocessed data
         prediction = model.predict(input_scaled)
 
-        # Decode the multilabel prediction (OneHotEncoder reverse transformation)
-        predicted_labels = encoder.inverse_transform(prediction)
+        # Handle all-zero predictions (invalid for inverse transform)
+        if np.all(prediction == 0):
+            st.warning("The prediction contains all zeros, which cannot be inverted to valid labels.")
+        else:
+            # Decode the multilabel prediction (OneHotEncoder reverse transformation)
+            predicted_labels = encoder.inverse_transform(prediction)
 
-        # Display the prediction
-        st.subheader("Predicted Microbial Organisms:")
-        st.write(predicted_labels)
+            # Display the prediction
+            st.subheader("Predicted Microbial Organisms:")
+            st.write(predicted_labels)
 
+    except NotFittedError as nfe:
+        st.error(f"The model, scaler, or encoder has not been fitted properly: {nfe}")
     except Exception as e:
         st.error(f"An error occurred during prediction: {e}")
 # Footer
