@@ -7,7 +7,7 @@ from sklearn.preprocessing import MinMaxScaler
 
 # Load the trained model
 @st.cache(allow_output_mutation=True)
-def load_model():
+def load_model(): 
     with open('microbial_modelreg.pkl', 'rb') as file:
         model = pickle.load(file)
     return model
