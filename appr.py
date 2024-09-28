@@ -1,185 +1,131 @@
-{
- "cells": [
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "id": "137ea947",
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "\n",
-    "import streamlit as st\n",
-    "import pandas as pd\n",
-    "import numpy as np\n",
-    "import pickle\n",
-    "from sklearn.ensemble import RandomForestRegressor\n",
-    "from sklearn.preprocessing import MinMaxScaler\n",
-    "\n",
-    "# Load the trained model\n",
-    "@st.cache(allow_output_mutation=True)\n",
-    "def load_model():\n",
-    "    with open('microbial_modelreg.pkl', 'rb') as file:\n",
-    "        model = pickle.load(file)\n",
-    "    return model\n",
-    "\n",
-    "# Load the scaler (for feature scaling)\n",
-    "@st.cache(allow_output_mutation=True)\n",
-    "def load_scaler():\n",
-    "    with open('scalers.pkl', 'rb') as file:\n",
-    "        scaler = pickle.load(file)\n",
-    "    return scaler\n",
-    "\n",
-    "# Load the model and scaler\n",
-    "model = load_model()\n",
-    "scaler = load_scaler()\n",
-    "\n",
-    "# Streamlit app layout\n",
-    "st.title(\"Microbial Organisms Prediction App\")\n",
-    "\n",
-    "st.header(\"Input Predicting Variables\")"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "id": "025db71e",
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "# Collecting input values for all feature columns\n",
-    "fish_sample = st.text_input(\"Fish Sample\", \"\")\n",
-    "colour = st.text_input(\"Colour\", \"\")\n",
-    "odour = st.text_input(\"Odour\", \"\")\n",
-    "texture = st.text_input(\"Texture\", \"\")\n",
-    "flavour = st.text_input(\"Flavour\", \"\")\n",
-    "appearance = st.text_input(\"Appearance\", \"\")\n",
-    "insect_invasion = st.text_input(\"Insect Invasion\", \"\")\n",
-    "overall_acceptability = st.text_input(\"Overall Acceptability\", \"\")\n",
-    "market = st.text_input(\"Market\", \"\")\n",
-    "state = st.text_input(\"State\", \"\")\n",
-    "tba = st.text_input(\"TBA\", \"\")\n",
-    "pbc = st.text_input(\"PBC\", \"\")\n",
-    "tfc = st.text_input(\"TFC\", \"\")\n",
-    "pigmentation = st.text_input(\"Pigmentation1\", \"\")\n",
-    "elevation = st.text_input(\"Elevation1\", \"\")\n",
-    "texture_1 = st.text_input(\"Texture1\", \"\")\n",
-    "margin = st.text_input(\"Margin1\", \"\")\n",
-    "shape = st.text_input(\"Shape1\", \"\")\n",
-    "optical_density = st.text_input(\"Optical Density1\", \"\")\n",
-    "pigmentation_1 = st.text_input(\"Pigmentation2\", \"\")\n",
-    "elevation_1 = st.text_input(\"Elevation2\", \"\")\n",
-    "texture_2 = st.text_input(\"Texture2\", \"\")\n",
-    "margin_1 = st.text_input(\"Margin2\", \"\")\n",
-    "shape_1 = st.text_input(\"Shape2\", \"\")\n",
-    "optical_density_1 = st.text_input(\"Optical Density2\", \"\")\n",
-    "pigmentation_2 = st.text_input(\"Pigmentation3\", \"\")\n",
-    "elevation_2 = st.text_input(\"Elevation3\", \"\")\n",
-    "texture_3 = st.text_input(\"Texture3\", \"\")\n",
-    "margin_2 = st.text_input(\"Margin3\", \"\")\n",
-    "shape_2 = st.text_input(\"Shape3\", \"\")\n",
-    "optical_density_2 = st.text_input(\"Optical Density3\", \"\")\n",
-    "ph = st.number_input(\"pH\", min_value=0.0)\n",
-    "lipid_oxidation = st.number_input(\"Lipid Oxidation\", min_value=0.0)\n",
-    "moisture_content = st.number_input(\"Moisture Content\", min_value=0.0)\n",
-    "protein = st.number_input(\"Protein\", min_value=0.0)\n",
-    "fat = st.number_input(\"Fat\", min_value=0.0)\n",
-    "ash = st.number_input(\"Ash\", min_value=0.0)\n",
-    "# Combine input data into a DataFrame\n",
-    "input_data = pd.DataFrame({\n",
-    "    'Fish sample': [fish_sample],\n",
-    "    'Colour': [colour],\n",
-    "    'Odour': [odour],\n",
-    "    'Texture': [texture],\n",
-    "    'Flavour': [flavour],\n",
-    "    'Appearance': [appearance],\n",
-    "    'Insect Invasion': [insect_invasion],\n",
-    "    'Overall Acceptability': [overall_acceptability],\n",
-    "    'Market': [market],\n",
-    "    'State': [state],\n",
-    "    'TBA': [tba],\n",
-    "    'PBC': [pbc],\n",
-    "    'TFC': [tfc],\n",
-    "    'Pigmentation': [pigmentation],\n",
-    "    'Elevation': [elevation],\n",
-    "    'Texture.1': [texture_1],\n",
-    "    'Margin': [margin],\n",
-    "    'Shape': [shape],\n",
-    "    'Optical Density': [optical_density],\n",
-    "    'Pigmentation.1': [pigmentation_1],\n",
-    "    'Elevation.1': [elevation_1],\n",
-    "    'Texture.2': [texture_2],\n",
-    "    'Margin.1': [margin_1],\n",
-    "    'Shape.1': [shape_1],\n",
-    "    'Optical Density.1': [optical_density_1],\n",
-    "    'Pigmentation.2': [pigmentation_2],\n",
-    "    'Elevation.2': [elevation_2],\n",
-    "    'Texture.3': [texture_3],\n",
-    "    'Margin.2': [margin_2],\n",
-    "    'Shape.2': [shape_2],\n",
-    "    'Optical Density.2': [optical_density_2],\n",
-    "    'pH': [ph],\n",
-    "    'Lipid oxidation': [lipid_oxidation],\n",
-    "    'Moisture Content': [moisture_content],\n",
-    "    'Protein': [protein],\n",
-    "    'Fat': [fat],\n",
-    "    'Ash': [ash]\n",
-    "})\n"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "id": "ee2b3009",
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "\n",
-    "if st.button(\"Predict\"):\n",
-    "    try:\n",
-    "        # Preprocess the input data\n",
-    "        input_data_encoded = input_data.copy()\n",
-    "        # Encode categorical features if necessary\n",
-    "        # For example, if 'Fish sample' is a categorical feature:\n",
-    "        # input_data_encoded['Fish sample'] = label_encoder.transform(input_data_encoded['Fish sample'])\n",
-    "\n",
-    "        # Scale numeric features\n",
-    "        numeric_columns = input_data_encoded.select_dtypes(include=np.number).columns\n",
-    "        input_data_encoded[numeric_columns] = scaler.transform(input_data_encoded[numeric_columns])\n",
-    "\n",
-    "        # Make predictions with the preprocessed data\n",
-    "        prediction = model.predict(input_data_encoded)\n",
-    "\n",
-    "        # Display the prediction\n",
-    "        st.subheader(\"Predicted Values:\")\n",
-    "        st.write(prediction)\n",
-    "\n",
-    "    except Exception as e:\n",
-    "        st.error(f\"An error occurred during prediction: {e}\")\n",
-    "\n",
-    "# Footer\n",
-    "st.write(\"This application uses a regression model to predict microbial organisms based on input features.\")"
-   ]
-  }
- ],
- "metadata": {
-  "kernelspec": {
-   "display_name": "Python 3 (ipykernel)",
-   "language": "python",
-   "name": "python3"
-  },
-  "language_info": {
-   "codemirror_mode": {
-    "name": "ipython",
-    "version": 3
-   },
-   "file_extension": ".py",
-   "mimetype": "text/x-python",
-   "name": "python",
-   "nbconvert_exporter": "python",
-   "pygments_lexer": "ipython3",
-   "version": "3.9.13"
-  }
- },
- "nbformat": 4,
- "nbformat_minor": 5
-}
+import streamlit as st
+import pandas as pd
+import numpy as np
+import pickle
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.preprocessing import MinMaxScaler
+
+# Load the trained model
+@st.cache(allow_output_mutation=True)
+def load_model():
+    with open('microbial_modelreg.pkl', 'rb') as file:
+        model = pickle.load(file)
+    return model
+
+# Load the scaler (for feature scaling)
+@st.cache(allow_output_mutation=True)
+def load_scaler():
+    with open('scalers.pkl', 'rb') as file:
+        scaler = pickle.load(file)
+    return scaler
+
+# Load the model and scaler
+model = load_model()
+scaler = load_scaler()
+
+# Streamlit app layout
+st.title("Microbial Organisms Prediction App")
+
+st.header("Input Predicting Variables")
+# Collecting input values for all feature columns
+fish_sample = st.text_input("Fish Sample", "")
+colour = st.text_input("Colour", "")
+odour = st.text_input("Odour", "")
+texture = st.text_input("Texture", "")
+flavour = st.text_input("Flavour", "")
+appearance = st.text_input("Appearance", "")
+insect_invasion = st.text_input("Insect Invasion", "")
+overall_acceptability = st.text_input("Overall Acceptability", "")
+market = st.text_input("Market", "")
+state = st.text_input("State", "")
+tba = st.text_input("TBA", "")
+pbc = st.text_input("PBC", "")
+tfc = st.text_input("TFC", "")
+pigmentation = st.text_input("Pigmentation1", "")
+elevation = st.text_input("Elevation1", "")
+texture_1 = st.text_input("Texture1", "")
+margin = st.text_input("Margin1", "")
+shape = st.text_input("Shape1", "")
+optical_density = st.text_input("Optical Density1", "")
+pigmentation_1 = st.text_input("Pigmentation2", "")
+elevation_1 = st.text_input("Elevation2", "")
+texture_2 = st.text_input("Texture2", "")
+margin_1 = st.text_input("Margin2", "")
+shape_1 = st.text_input("Shape2", "")
+optical_density_1 = st.text_input("Optical Density2", "")
+pigmentation_2 = st.text_input("Pigmentation3", "")
+elevation_2 = st.text_input("Elevation3", "")
+texture_3 = st.text_input("Texture3", "")
+margin_2 = st.text_input("Margin3", "")
+shape_2 = st.text_input("Shape3", "")
+optical_density_2 = st.text_input("Optical Density3", "")
+ph = st.number_input("pH", min_value=0.0)
+lipid_oxidation = st.number_input("Lipid Oxidation", min_value=0.0)
+moisture_content = st.number_input("Moisture Content", min_value=0.0)
+protein = st.number_input("Protein", min_value=0.0)
+fat = st.number_input("Fat", min_value=0.0)
+ash = st.number_input("Ash", min_value=0.0)
+# Combine input data into a DataFrame
+input_data = pd.DataFrame({
+    'Fish sample': [fish_sample],
+    'Colour': [colour],
+    'Odour': [odour],
+    'Texture': [texture],
+    'Flavour': [flavour],
+    'Appearance': [appearance],
+    'Insect Invasion': [insect_invasion],
+    'Overall Acceptability': [overall_acceptability],
+    'Market': [market],
+    'State': [state],
+    'TBA': [tba],
+    'PBC': [pbc],
+    'TFC': [tfc],
+    'Pigmentation': [pigmentation],
+    'Elevation': [elevation],
+    'Texture.1': [texture_1],
+    'Margin': [margin],
+    'Shape': [shape],
+    'Optical Density': [optical_density],
+    'Pigmentation.1': [pigmentation_1],
+    'Elevation.1': [elevation_1],
+    'Texture.2': [texture_2],
+    'Margin.1': [margin_1],
+    'Shape.1': [shape_1],
+    'Optical Density.1': [optical_density_1],
+    'Pigmentation.2': [pigmentation_2],
+    'Elevation.2': [elevation_2],
+    'Texture.3': [texture_3],
+    'Margin.2': [margin_2],
+    'Shape.2': [shape_2],
+    'Optical Density.2': [optical_density_2],
+    'pH': [ph],
+    'Lipid oxidation': [lipid_oxidation],
+    'Moisture Content': [moisture_content],
+    'Protein': [protein],
+    'Fat': [fat],
+    'Ash': [ash]
+})
+if st.button("Predict"):
+    try:
+        # Preprocess the input data
+        input_data_encoded = input_data.copy()
+        # Encode categorical features if necessary
+        # For example, if 'Fish sample' is a categorical feature:
+        # input_data_encoded['Fish sample'] = label_encoder.transform(input_data_encoded['Fish sample'])
+
+        # Scale numeric features
+        numeric_columns = input_data_encoded.select_dtypes(include=np.number).columns
+        input_data_encoded[numeric_columns] = scaler.transform(input_data_encoded[numeric_columns])
+
+        # Make predictions with the preprocessed data
+        prediction = model.predict(input_data_encoded)
+
+        # Display the prediction
+        st.subheader("Predicted Values:")
+        st.write(prediction)
+
+    except Exception as e:
+        st.error(f"An error occurred during prediction: {e}")
+
+# Footer
+st.write("This application uses a regression model to predict microbial organisms based on input features.")
