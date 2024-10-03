@@ -27,7 +27,17 @@ scaler = load_scaler()
 st.title("Microbial Organisms Prediction App")
 
 st.header("Input Predicting Variables")
-# Collecting input values for all feature columns
+# Expected features during prediction (based on your feature set)
+expected_features = [
+    'Fish sample', 'Colour', 'Odour', 'Texture', 'Flavour', 'Appearance',
+    'Insect Invasion', 'Overall Acceptability', 'Market', 'State', 'TBA', 'PBC', 
+    'TFC', 'Pigmentation1', 'Elevation1', 'Texture1', 'Margin1', 'Shape1', 'Optical Density1',
+    'Pigmentation2', 'Elevation2', 'Texture2', 'Margin2', 'Shape2', 'Optical Density2',
+    'Pigmentation3', 'Elevation3', 'Texture3', 'Margin3', 'Shape3', 'Optical Density3',
+    'pH', 'Lipid oxidation', 'Moisture Content', 'Protein', 'Fat', 'Ash'
+]
+
+# Input fields
 fish_sample = st.text_input("Fish Sample", "")
 colour = st.text_input("Colour", "")
 odour = st.text_input("Odour", "")
@@ -60,11 +70,12 @@ margin3 = st.text_input("Margin3", "")
 shape3 = st.text_input("Shape3", "")
 optical_density3 = st.text_input("Optical Density3", "")
 ph = st.number_input("pH", min_value=0.0)
-lipid_oxidation = st.number_input("Lipid Oxidation", min_value=0.0)
-moisture_content = st.number_input("Moisture Content", min_value=0.0)
-protein = st.number_input("Protein", min_value=0.0)
-fat = st.number_input("Fat", min_value=0.0)
-ash = st.number_input("Ash", min_value=0.0)
+lipid_oxidation = st.number_input("Lipid Oxidation (MDA) mg/L", min_value=0.0)
+moisture_content = st.number_input("Moisture Content (%)", min_value=0.0)
+protein = st.number_input("Protein (%)", min_value=0.0)
+fat = st.number_input("Fat (%)", min_value=0.0)
+ash = st.number_input("Ash (%)", min_value=0.0)
+
 # Combine input data into a DataFrame
 input_data = pd.DataFrame({
     'Fish sample': [fish_sample],
@@ -106,27 +117,20 @@ input_data = pd.DataFrame({
     'Ash': [ash]
 })
 
+# Reorder the columns to match the expected order
+input_data = input_data[expected_features]
+
 if st.button("Predict"):
     try:
-        # Preprocess the input data
-        input_data_encoded = input_data.copy()
-        # Encode categorical features if necessary
-        # For example, if 'Fish sample' is a categorical feature:
-        # input_data_encoded['Fish sample'] = label_encoder.transform(input_data_encoded['Fish sample'])
-
-        # Scale numeric features
-        numeric_columns = input_data_encoded.select_dtypes(include=np.number).columns
-        input_data_encoded[numeric_columns] = scaler.transform(input_data_encoded[numeric_columns])
-
         # Make predictions with the preprocessed data
-        prediction = model.predict(input_data_encoded)
+        prediction = model.predict(input_data)
 
         # Display the prediction
-        st.subheader("Predicted Values:")
+        st.subheader("Predicted Microbial Organisms:")
         st.write(prediction)
 
     except Exception as e:
         st.error(f"An error occurred during prediction: {e}")
 
 # Footer
-st.write("This application uses a regression model to predict microbial organisms based on input features.")
+st.write("This application uses a multi-label classification model to predict microbial organisms based on input features.")
