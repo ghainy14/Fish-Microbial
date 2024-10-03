@@ -2,42 +2,29 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import pickle
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.preprocessing import MinMaxScaler
 
 # Load the trained model
-@st.cache(allow_output_mutation=True)
-def load_model(): 
-    with open('microbial_modelreg.pkl', 'rb') as file:
+@st.cache_resource
+def load_model():
+    with open('microbial_model.pkl', 'rb') as file:
         model = pickle.load(file)
     return model
 
-# Load the scaler (for feature scaling)
-@st.cache(allow_output_mutation=True)
-def load_scaler():
+@st.cache_resource
+def load_model():
     with open('scalers.pkl', 'rb') as file:
-        scaler = pickle.load(file)
-    return scaler
+        model = pickle.load(file)
+    return model
 
-# Load the model and scaler
+# Load the model
 model = load_model()
-scaler = load_scaler()
 
 # Streamlit app layout
-st.title("Microbial Organisms Prediction App")
+st.title("Microbial Organisms Multi-Label Prediction App")
 
+# Example: Input fields (customize these based on your feature space)
 st.header("Input Predicting Variables")
-# Expected features during prediction (based on your feature set)
-expected_features = [
-    'Fish sample', 'Colour', 'Odour', 'Texture', 'Flavour', 'Appearance',
-    'Insect Invasion', 'Overall Acceptability', 'Market', 'State', 'TBA', 'PBC', 
-    'TFC', 'Pigmentation1', 'Elevation1', 'Texture1', 'Margin1', 'Shape1', 'Optical Density1',
-    'Pigmentation2', 'Elevation2', 'Texture2', 'Margin2', 'Shape2', 'Optical Density2',
-    'Pigmentation3', 'Elevation3', 'Texture3', 'Margin3', 'Shape3', 'Optical Density3',
-    'pH', 'Lipid oxidation', 'Moisture Content', 'Protein', 'Fat', 'Ash'
-]
-
-# Input fields
+# Collecting input values for all feature columns
 fish_sample = st.text_input("Fish Sample", "")
 colour = st.text_input("Colour", "")
 odour = st.text_input("Odour", "")
@@ -117,15 +104,16 @@ input_data = pd.DataFrame({
     'Ash': [ash]
 })
 
-# Reorder the columns to match the expected order
-input_data = input_data[expected_features]
-
+# Button to trigger prediction
 if st.button("Predict"):
     try:
-        # Make predictions with the preprocessed data
+        # Ensure the input is preprocessed the same way as during training
+        # (This step may include scaling or encoding depending on how the model was trained)
+        
+        # Make predictions using the loaded model
         prediction = model.predict(input_data)
-
-        # Display the prediction
+        
+        # Assuming your model returns labels in a human-readable format
         st.subheader("Predicted Microbial Organisms:")
         st.write(prediction)
 
