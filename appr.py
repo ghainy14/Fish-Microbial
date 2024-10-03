@@ -10,21 +10,22 @@ def load_model():
         model = pickle.load(file)
     return model
 
+# Load the scaler
 @st.cache_resource
-def load_model():
-    with open('scalers.pkl', 'rb') as file:
+def load_scaler():
+    with open('scaler.pkl', 'rb') as file:
         scaler = pickle.load(file)
     return scaler
 
-# Load the model
+# Load the model and scaler
 model = load_model()
+scaler = load_scaler()
 
 # Streamlit app layout
 st.title("Microbial Organisms Multi-Label Prediction App")
 
-# Example: Input fields (customize these based on your feature space)
+# Input fields for all feature columns
 st.header("Input Predicting Variables")
-# Collecting input values for all feature columns
 fish_sample = st.text_input("Fish Sample", "")
 colour = st.text_input("Colour", "")
 odour = st.text_input("Odour", "")
@@ -107,13 +108,14 @@ input_data = pd.DataFrame({
 # Button to trigger prediction
 if st.button("Predict"):
     try:
-        # Ensure the input is preprocessed the same way as during training
-        # (This step may include scaling or encoding depending on how the model was trained)
+        # Apply scaling to numeric fields (if necessary)
+        numeric_fields = input_data.select_dtypes(include=np.number)
+        input_data_scaled = scaler.transform(numeric_fields)
         
         # Make predictions using the loaded model
-        prediction = model.predict(input_data)
+        prediction = model.predict(input_data_scaled)
         
-        # Assuming your model returns labels in a human-readable format
+        # Display the prediction
         st.subheader("Predicted Microbial Organisms:")
         st.write(prediction)
 
