@@ -6,14 +6,14 @@ import pickle
 # Load the trained model
 @st.cache_resource
 def load_model():
-    with open('microbial_model.pkl', 'rb') as file:
+    with open('microbial_modelreg.pkl', 'rb') as file:
         model = pickle.load(file)
     return model
 
 # Load the scaler
 @st.cache_resource
 def load_scaler():
-    with open('scaler.pkl', 'rb') as file:
+    with open('scalers.pkl', 'rb') as file:
         scaler = pickle.load(file)
     return scaler
 
