@@ -13,8 +13,8 @@ def load_model():
 @st.cache_resource
 def load_model():
     with open('scalers.pkl', 'rb') as file:
-        model = pickle.load(file)
-    return model
+        scaler = pickle.load(file)
+    return scaler
 
 # Load the model
 model = load_model()
